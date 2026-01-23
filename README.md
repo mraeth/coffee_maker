@@ -84,6 +84,4 @@ coffee_amount = 20   # grams of coffee
 - [ ] Recipe management
 - [ ] Brewing profiles and presets
 
-## License
 
-MIT
