@@ -130,7 +130,7 @@ app.layout = dbc.Container(
 
         dcc.Interval(
             id="interval",
-            interval=50,   # ms
+            interval=500,   # ms
             n_intervals=0,
             disabled=True
         ),
@@ -326,4 +326,4 @@ def save_button_callback(n_clicks, identifier):
 
 # ---- Run server ----
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=8060)
+    app.run(debug=False, host="0.0.0.0", port=8060, threaded=True)
