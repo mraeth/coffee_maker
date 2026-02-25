@@ -11,6 +11,7 @@ import dash_bootstrap_components as dbc
 import plotly.io as pio
 
 from scipy.special import erf
+from scipy.signal import savgol_filter
 
 from dash import dash_table
 
@@ -24,7 +25,15 @@ pio.templates.default = "plotly_dark"
 pio.templates["plotly_dark"]["layout"]["font"]["size"] = 18
 pio.templates["plotly_dark"]["layout"]["font"]["family"] = "Arial"
 
-MAX_POINTS = 600  # cap stored/rendered data points (~5 min at 500 ms)
+MAX_POINTS = 600    # cap stored/rendered data points (~5 min at 500 ms)
+SMOOTH_WINDOW = 11  # Savitzky-Golay window length (odd, in samples)
+SMOOTH_POLY = 3     # polynomial order
+
+
+def smooth(data):
+    if len(data) < SMOOTH_WINDOW:
+        return data
+    return savgol_filter(data, SMOOTH_WINDOW, SMOOTH_POLY)
 
 app = dash.Dash(
     __name__,
@@ -237,7 +246,7 @@ def update_all(n_intervals, reset_clicks):
             weight_data = weight_data[-MAX_POINTS:]
 
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=x_data, y=temp_data, mode="lines", name="Temperature (°C)"))
+    fig.add_trace(go.Scatter(x=x_data, y=smooth(temp_data), mode="lines", name="Temperature (°C)"))
     fig.update_layout(
         xaxis_title="Time (s)",
         yaxis_title="Temperature (°C)",
@@ -257,7 +266,7 @@ def update_all(n_intervals, reset_clicks):
             color = "yellow"
 
     fig2 = go.Figure()
-    fig2.add_trace(go.Scatter(x=x_data, y=weight_data, line_color=color, mode="lines", name="Weight (g)"))
+    fig2.add_trace(go.Scatter(x=x_data, y=smooth(weight_data), line_color=color, mode="lines", name="Weight (g)"))
     fig2.add_hline(y=weight_target, line_dash="dash", line_color="blue", annotation_text="Target Weight", annotation_position="top left")
     fig2.update_layout(
         xaxis_title="Time (s)",
