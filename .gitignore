@@ -31,5 +31,16 @@ Thumbs.db
 # Logs
 *.log
 
+# Jupyter
+.ipynb_checkpoints/
+
+# Bluetooth / serial
+/dev/rfcomm*
+
+# Dependencies vendored via git subtree — keep source, ignore build artifacts
+deps/hx711py/*.egg-info/
+deps/hx711py/build/
+deps/hx711py/dist/
+
 # Claude Code
 .claude/
